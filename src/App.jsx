@@ -1,15 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
 import Card from "./components/Card/Card";
+import fetchData from "./services/api";
+import initialData from "./halpers/initialData";
 
 function App() {
-  return (
-    <div className="flex flex-col w-full h-screen items-center justify-center">
+  const [city, setCity] = useState('');
+  const [data, setData] = useState(initialData);
 
-      <form>
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    fetchData(city).then((resp) => {
+      setData(resp);
+    });
+  };
+
+
+  return (
+    <div className="flex flex-col w-full h-screen items-center sm:justify-center p-4">
+
+      <form onSubmit={ handleSubmit } className="fixed bottom-0 w-full flex p-4 sm:relative justify-center">
         <input 
         type="text" 
-        placeholder="cidade" 
-        className="p-3 rounded-lg outline-none"
+        placeholder="Cidade" 
+        className="p-3 rounded-lg outline-none w-full sm:max-w-[300px] flex-1" 
+        value={city}
+        onChange={({ target: { value }  }) => setCity(value) }
         />
         <button 
         type="submit"
@@ -19,7 +35,7 @@ function App() {
         </button>
       </form>
 
-      <Card />
+      <Card data={data} />
 
     </div>
   );
